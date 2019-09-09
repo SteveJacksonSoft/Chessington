@@ -62,6 +62,20 @@ namespace Chessington.GameEngine {
             return square.Row >= 0 && square.Row < GameSettings.BoardSize &&
                    square.Col >= 0 && square.Col < GameSettings.BoardSize;
         }
+
+        public delegate Square Movement(Square square);
+
+        public List<Square> GetSquaresHitByRepeatedMovement(Square startingSquare, Movement movement) {
+            Square nextSquare = movement(startingSquare);
+            List<Square> collectedSquares = new List<Square>();
+            
+            while (ContainsSquare(nextSquare)) {
+                collectedSquares.Add(nextSquare);
+                nextSquare = movement(nextSquare);
+            }
+
+            return collectedSquares;
+        }
         
         public delegate void PieceCapturedEventHandler(Piece piece);
 

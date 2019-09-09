@@ -11,42 +11,18 @@ namespace Chessington.GameEngine.Pieces {
 
             List<Square> availableMoves = new List<Square>();
 
-            availableMoves.AddRange(
-                IterateMovementWhileOnBoard(board, currentPosition, square => 
-                    square.NextSquare(Direction.UP).NextSquare(Direction.RIGHT)
-                )
-            );
-            availableMoves.AddRange(
-                IterateMovementWhileOnBoard(board, currentPosition, square => 
-                    square.NextSquare(Direction.UP).NextSquare(Direction.LEFT)
-                )
-            );
-            availableMoves.AddRange(
-                IterateMovementWhileOnBoard(board, currentPosition, square => 
-                    square.NextSquare(Direction.DOWN).NextSquare(Direction.RIGHT)
-                )
-            );
-            availableMoves.AddRange(
-                IterateMovementWhileOnBoard(board, currentPosition, square => 
-                    square.NextSquare(Direction.DOWN).NextSquare(Direction.LEFT)
-                )
+            List<Board.Movement> directions = new List<Board.Movement> {
+                square => square.NextSquare(Direction.UP).NextSquare(Direction.RIGHT),
+                square => square.NextSquare(Direction.UP).NextSquare(Direction.LEFT),
+                square => square.NextSquare(Direction.DOWN).NextSquare(Direction.RIGHT),
+                square => square.NextSquare(Direction.DOWN).NextSquare(Direction.LEFT),
+            };
+            
+            directions.ForEach(direction => 
+                availableMoves.AddRange(board.GetSquaresHitByRepeatedMovement(currentPosition, direction))
             );
             
             return availableMoves;
-        }
-
-        private delegate Square Movement(Square square);
-
-        private List<Square> IterateMovementWhileOnBoard(Board board, Square startingSquare, Movement movement) {
-            Square nextSquare = movement(startingSquare);
-            List<Square> collectedSquares = new List<Square>();
-            
-            while (board.ContainsSquare(nextSquare)) {
-                collectedSquares.Add(nextSquare);
-                nextSquare = movement(nextSquare);
-            }
-
-            return collectedSquares;
         }
     }
 }
