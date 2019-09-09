@@ -21,11 +21,11 @@ namespace Chessington.GameEngine.Pieces {
                 square => square.NextSquare(Direction.DOWN),
                 square => square.NextSquare(Direction.LEFT)
             };
-            
-            directions.ForEach(direction => 
+
+            directions.ForEach(direction =>
                 availableMoves.AddRange(board.GetSquaresHitByRepeatedMovement(currentPosition, direction))
             );
-            
+
             return availableMoves;
         }
     }

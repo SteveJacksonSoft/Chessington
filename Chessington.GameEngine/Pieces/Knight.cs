@@ -19,7 +19,7 @@ namespace Chessington.GameEngine.Pieces {
                 Square.At(currentPosition.Row - 1, currentPosition.Col + 2),
                 Square.At(currentPosition.Row - 1, currentPosition.Col - 2),
             };
-            
+
             return availableMoves;
         }
     }
