@@ -3,14 +3,11 @@ using Chessington.GameEngine.Pieces;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Chessington.GameEngine.Tests.Pieces
-{
+namespace Chessington.GameEngine.Tests.Pieces {
     [TestFixture]
-    public class PawnTests
-    {
+    public class PawnTests {
         [Test]
-        public void WhitePawns_CanMoveOneSquareUp()
-        {
+        public void WhitePawns_CanMoveOneSquareUp() {
             var board = new Board();
             var pawn = new Pawn(Player.White);
             board.AddPiece(Square.At(7, 0), pawn);
@@ -21,8 +18,7 @@ namespace Chessington.GameEngine.Tests.Pieces
         }
 
         [Test]
-        public void BlackPawns_CanMoveOneSquareDown()
-        {
+        public void BlackPawns_CanMoveOneSquareDown() {
             var board = new Board();
             var pawn = new Pawn(Player.Black);
             board.AddPiece(Square.At(1, 0), pawn);
@@ -33,8 +29,7 @@ namespace Chessington.GameEngine.Tests.Pieces
         }
 
         [Test]
-        public void WhitePawns_WhichHaveNeverMoved_CanMoveTwoSquareUp()
-        {
+        public void WhitePawns_WhichHaveNeverMoved_CanMoveTwoSquareUp() {
             var board = new Board();
             var pawn = new Pawn(Player.White);
             board.AddPiece(Square.At(6, 5), pawn);
@@ -45,8 +40,7 @@ namespace Chessington.GameEngine.Tests.Pieces
         }
 
         [Test]
-        public void BlackPawns_WhichHaveNeverMoved_CanMoveTwoSquareUp()
-        {
+        public void BlackPawns_WhichHaveNeverMoved_CanMoveTwoSquareUp() {
             var board = new Board();
             var pawn = new Pawn(Player.Black);
             board.AddPiece(Square.At(1, 3), pawn);
@@ -57,8 +51,7 @@ namespace Chessington.GameEngine.Tests.Pieces
         }
 
         [Test]
-        public void WhitePawns_WhichHaveAlreadyMoved_CanOnlyMoveOneSquare()
-        {
+        public void WhitePawns_WhichHaveAlreadyMoved_CanOnlyMoveOneSquare() {
             var board = new Board();
             var pawn = new Pawn(Player.White);
             board.AddPiece(Square.At(6, 2), pawn);
@@ -71,8 +64,7 @@ namespace Chessington.GameEngine.Tests.Pieces
         }
 
         [Test]
-        public void BlackPawns_WhichHaveAlreadyMoved_CanOnlyMoveOneSquare()
-        {
+        public void BlackPawns_WhichHaveAlreadyMoved_CanOnlyMoveOneSquare() {
             var board = new Board(Player.Black);
             var pawn = new Pawn(Player.Black);
             board.AddPiece(Square.At(5, 2), pawn);

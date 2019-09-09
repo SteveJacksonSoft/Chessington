@@ -3,14 +3,11 @@ using Chessington.GameEngine.Pieces;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Chessington.GameEngine.Tests.Pieces
-{
+namespace Chessington.GameEngine.Tests.Pieces {
     [TestFixture]
-    public class BishopTests
-    {
+    public class BishopTests {
         [Test]
-        public void Bishop_CanMove_Diagonally()
-        {
+        public void Bishop_CanMove_Diagonally() {
             var board = new Board();
             var bishop = new Bishop(Player.White);
             board.AddPiece(Square.At(4, 4), bishop);
