@@ -20,7 +20,7 @@ namespace Chessington.GameEngine.Pieces {
                 Square.At(currentPosition.Row - 1, currentPosition.Col - 2),
             };
 
-            return availableMoves;
+            return availableMoves.Where(square => board.ContainsSquare(square) && board.SquareIsEmpty(square));
         }
     }
 }

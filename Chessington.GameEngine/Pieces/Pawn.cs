@@ -22,14 +22,19 @@ namespace Chessington.GameEngine.Pieces {
         }
 
         private bool CanMoveOneSquareForwards(Board board) {
-            return board.SquareIsEmpty(board.FindPiece(this).GetRelativeSquare(AttackingDirection, 1));
+            Square targetSquare = board.FindPiece(this).GetRelativeSquare(AttackingDirection, 1);
+            return board.ContainsSquare(targetSquare) && board.SquareIsEmpty(targetSquare);
         }
 
         private bool CanMoveTwoSquaresForwards(Board board) {
             Square currentPosition = board.FindPiece(this);
-            return board.SquareIsEmpty(currentPosition.GetRelativeSquare(AttackingDirection, 1))
+            Square firstSquareForwards = currentPosition.GetRelativeSquare(AttackingDirection, 1);
+            Square secondSquareForwards = firstSquareForwards.GetRelativeSquare(AttackingDirection, 1);
+            return board.ContainsSquare(firstSquareForwards)
+                   && board.SquareIsEmpty(firstSquareForwards)
                    && !HasMoved
-                   && board.SquareIsEmpty(currentPosition.GetRelativeSquare(AttackingDirection, 2));
+                   && board.ContainsSquare(secondSquareForwards)
+                   && board.SquareIsEmpty(secondSquareForwards);
         }
     }
 }
