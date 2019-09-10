@@ -9,14 +9,14 @@ namespace Chessington.GameEngine.Pieces {
             Square currentPosition = board.FindPiece(this);
 
             return new List<Square> {
-                currentPosition.NextSquare(Direction.UP),
-                currentPosition.NextSquare(Direction.RIGHT),
-                currentPosition.NextSquare(Direction.DOWN),
-                currentPosition.NextSquare(Direction.LEFT),
-                currentPosition.NextSquare(Direction.UP).NextSquare(Direction.LEFT),
-                currentPosition.NextSquare(Direction.UP).NextSquare(Direction.RIGHT),
-                currentPosition.NextSquare(Direction.DOWN).NextSquare(Direction.LEFT),
-                currentPosition.NextSquare(Direction.DOWN).NextSquare(Direction.RIGHT),
+                currentPosition.GetSquareByRelativePosition(Direction.Up, 1),
+                currentPosition.GetSquareByRelativePosition(Direction.Right, 1),
+                currentPosition.GetSquareByRelativePosition(Direction.Down, 1),
+                currentPosition.GetSquareByRelativePosition(Direction.Left, 1),
+                currentPosition.GetSquareByRelativePosition(Direction.UpLeft, 1),
+                currentPosition.GetSquareByRelativePosition(Direction.UpRight, 1),
+                currentPosition.GetSquareByRelativePosition(Direction.DownLeft, 1),
+                currentPosition.GetSquareByRelativePosition(Direction.DownRight, 1),
             };
         }
     }

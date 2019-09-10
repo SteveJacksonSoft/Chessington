@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Chessington.GameEngine.Pieces {
@@ -11,12 +12,14 @@ namespace Chessington.GameEngine.Pieces {
 
             List<Square> availableMoves = new List<Square>();
 
-            List<Board.Movement> directions = new List<Board.Movement> {
-                square => square.NextSquare(Direction.UP).NextSquare(Direction.RIGHT),
-                square => square.NextSquare(Direction.UP).NextSquare(Direction.LEFT),
-                square => square.NextSquare(Direction.DOWN).NextSquare(Direction.RIGHT),
-                square => square.NextSquare(Direction.DOWN).NextSquare(Direction.LEFT),
+            List<Func<Square, Square>> directions = new List<Func<Square, Square>> {
+                square => square.GetSquareByRelativePosition(Direction.UpRight, 1),
+                square => square.GetSquareByRelativePosition(Direction.UpLeft, 1),
+                square => square.GetSquareByRelativePosition(Direction.DownRight, 1),
+                square => square.GetSquareByRelativePosition(Direction.DownLeft, 1)
             };
+
+            directions.SelectMany(direction => board.GetSquaresHitByRepeatedMovement(currentPosition, direction));
             
             directions.ForEach(direction => 
                 availableMoves.AddRange(board.GetSquaresHitByRepeatedMovement(currentPosition, direction))

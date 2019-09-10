@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Chessington.GameEngine.Pieces {
     public class Pawn : Piece {
@@ -12,18 +11,34 @@ namespace Chessington.GameEngine.Pieces {
             List<Square> availableMoves = new List<Square>();
 
             if (Player == Player.White) {
-                availableMoves.Add(Square.At(currentPosition.Row - 1, currentPosition.Col));
-                if (currentPosition.Row == 6) {
-                    availableMoves.Add(Square.At(currentPosition.Row - 2, currentPosition.Col));
+                Square firstSquareUp = currentPosition.GetSquareByRelativePosition(Direction.Up, 1);
+                if (board.GetPiece(firstSquareUp) == null) {
+                    availableMoves.Add(firstSquareUp);
+                    if (currentPosition.Row == 6) {
+                        Square secondSquareUp = firstSquareUp.GetSquareByRelativePosition(Direction.Up, 1);
+                        if (board.GetPiece(secondSquareUp) == null) {
+                            availableMoves.Add(Square.At(currentPosition.Row - 2, currentPosition.Col));
+                        }
+                    }
                 }
             } else {
-                availableMoves.Add(Square.At(currentPosition.Row + 1, currentPosition.Col));
-                if (currentPosition.Row == 1) {
-                    availableMoves.Add(Square.At(currentPosition.Row + 2, currentPosition.Col));
+                Square firstSquareDown = currentPosition.GetSquareByRelativePosition(Direction.Down, 1);
+                if (board.GetPiece(firstSquareDown) == null) {
+                    availableMoves.Add(firstSquareDown);
+                    if (currentPosition.Row == 1) {
+                        Square secondSquareDown = firstSquareDown.GetSquareByRelativePosition(Direction.Down, 1);
+                        if (board.GetPiece(secondSquareDown) == null) {
+                            availableMoves.Add(secondSquareDown);
+                        }
+                    }
                 }
             }
 
             return availableMoves;
+        }
+
+        private IEnumerable<Square> RemoveDisallowedMoves(IEnumerable<Square> availableMoves, Board board) {
+            return new List<Square>();
         }
     }
 }

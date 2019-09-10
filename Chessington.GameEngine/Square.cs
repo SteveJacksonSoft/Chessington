@@ -35,21 +35,27 @@
             return !left.Equals(right);
         }
 
-        public Square NextSquare(Direction direction) {
-            if (direction == Direction.UP) {
-                return new Square(Row - 1, Col);
+        public Square GetSquareByRelativePosition(Direction direction, int distance) {
+            switch (direction) {
+                case Direction.Up:
+                    return new Square(Row - distance, Col);
+                case Direction.Down:
+                    return new Square(Row + distance, Col);
+                case Direction.Left:
+                    return new Square(Row, Col - distance);
+                case Direction.Right:
+                    return new Square(Row, Col + distance);
+                case Direction.UpRight:
+                    return new Square(Row - distance, Col + distance);
+                case Direction.UpLeft:
+                    return new Square(Row - distance, Col - distance);
+                case Direction.DownLeft:
+                    return new Square(Row + distance, Col + distance);
+                case Direction.DownRight:
+                    return new Square(Row + distance, Col - distance);
+                default:
+                    return this;
             }
-            if (direction == Direction.DOWN) {
-                return new Square(Row + 1, Col);
-            }
-            if (direction == Direction.LEFT) {
-                return new Square(Row, Col - 1);
-            }
-            if (direction == Direction.RIGHT) {
-                return new Square(Row, Col + 1);
-            }
-
-            return this;
         }
 
         public override string ToString() {
