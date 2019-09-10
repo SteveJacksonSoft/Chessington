@@ -20,7 +20,15 @@ namespace Chessington.GameEngine.Pieces {
                 Square.At(currentPosition.Row - 1, currentPosition.Col - 2),
             };
 
-            return availableMoves.Where(square => board.ContainsSquare(square) && board.SquareIsEmpty(square));
+            return availableMoves.Where(square => {
+                if (!board.ContainsSquare(square)) {
+                    return false;
+                }
+                Piece occupyingPiece = board.GetPiece(square);
+                return occupyingPiece == null || occupyingPiece.Player != this.Player;
+                // QQ question - Should this be sectioned into two methods? Or even two `Where`s?
+                // Where would the second method live?
+            });
         }
     }
 }
