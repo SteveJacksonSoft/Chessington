@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Chessington.GameEngine.Pieces;
 
 namespace Chessington.GameEngine {
     public class Board {
         private readonly Piece[,] board;
+        public Square[] PreviousMove { get; private set; }
         public Player CurrentPlayer { get; private set; }
         public IList<Piece> CapturedPieces { get; private set; }
-        
+
         public Board()
             : this(Player.White) { }
 
@@ -16,6 +16,7 @@ namespace Chessington.GameEngine {
             board = boardState ?? new Piece[GameSettings.BoardSize, GameSettings.BoardSize];
             CurrentPlayer = currentPlayer;
             CapturedPieces = new List<Piece>();
+            PreviousMove = new Square[2];
         }
 
         public void AddPiece(Square square, Piece pawn) {
@@ -45,17 +46,39 @@ namespace Chessington.GameEngine {
                 throw new ArgumentException("The supplied piece does not belong to the current player.");
             }
 
-            //If the space we're moving to is occupied, we need to mark it as captured.
-            if (board[to.Row, to.Col] != null) {
-                OnPieceCaptured(board[to.Row, to.Col]);
+            MarkAnyCapturedPiece(to);
+            RelocateMovingPiece(from, to);
+            ImplementAnyEnPassant(movingPiece, from, to);
+            RecordAsPreviousMove(from, to);
+            PassToNextPlayer(movingPiece);
+        }
+
+        private void MarkAnyCapturedPiece(Square target) {
+            if (board[target.Row, target.Col] != null) {
+                OnPieceCaptured(board[target.Row, target.Col]);
             }
+        }
 
-            //Move the piece and set the 'from' square to be empty.
-            board[to.Row, to.Col] = board[from.Row, from.Col];
-            board[from.Row, from.Col] = null;
+        private void RelocateMovingPiece(Square startingSquare, Square destination) {
+            board[destination.Row, destination.Col] = board[startingSquare.Row, startingSquare.Col];
+            board[startingSquare.Row, startingSquare.Col] = null;
+        }
 
-            movingPiece.HasMoved = true;
+        private void ImplementAnyEnPassant(Piece movingPiece, Square from, Square to) {
+            if (!(movingPiece is Pawn) || from.Col == to.Col) {
+                return;
+            }
+            
+            OnPieceCaptured(board[from.Row, to.Col]);
+            board[from.Row, to.Col] = null;
+        }
 
+        private void RecordAsPreviousMove(Square from, Square to) {
+            PreviousMove[0] = from;
+            PreviousMove[1] = to;
+        }
+
+        private void PassToNextPlayer(Piece movingPiece) {
             CurrentPlayer = movingPiece.Player == Player.White ? Player.Black : Player.White;
             OnCurrentPlayerChanged(CurrentPlayer);
         }
@@ -76,15 +99,17 @@ namespace Chessington.GameEngine {
          */
         public IEnumerable<Square> GetLineInDirectionUpToBlockingPiece(Square startingSquare, Direction direction) {
             Square nextSquare = startingSquare.GetRelativeSquare(direction, 1);
-            while(true) {
+            while (true) {
                 if (!ContainsSquare(nextSquare)) {
                     yield break;
                 }
+
                 yield return nextSquare;
                 if (!SquareIsEmpty(nextSquare)) {
                     yield break;
                 }
-                nextSquare = nextSquare.GetRelativeSquare(direction, 1);;
+
+                nextSquare = nextSquare.GetRelativeSquare(direction, 1);
             }
         }
 
