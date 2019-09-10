@@ -35,7 +35,7 @@
             return !left.Equals(right);
         }
 
-        public Square GetSquareByRelativePosition(Direction direction, int distance) {
+        public Square GetRelativeSquare(Direction direction, int distance) {
             switch (direction) {
                 case Direction.Up:
                     return new Square(Row - distance, Col);

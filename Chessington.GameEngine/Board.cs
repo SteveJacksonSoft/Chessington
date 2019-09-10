@@ -8,7 +8,7 @@ namespace Chessington.GameEngine {
         private readonly Piece[,] board;
         public Player CurrentPlayer { get; private set; }
         public IList<Piece> CapturedPieces { get; private set; }
-
+        
         public Board()
             : this(Player.White) { }
 
@@ -54,13 +54,19 @@ namespace Chessington.GameEngine {
             board[to.Row, to.Col] = board[from.Row, from.Col];
             board[from.Row, from.Col] = null;
 
+            movingPiece.HasMoved = true;
+
             CurrentPlayer = movingPiece.Player == Player.White ? Player.Black : Player.White;
             OnCurrentPlayerChanged(CurrentPlayer);
         }
-
+        
         public bool ContainsSquare(Square square) {
             return square.Row >= 0 && square.Row < GameSettings.BoardSize &&
                    square.Col >= 0 && square.Col < GameSettings.BoardSize;
+        }
+
+        public bool SquareIsOccupied(Square square) {
+            return board[square.Row, square.Col] == null;
         }
 
         public IEnumerable<Square> GetSquaresHitByRepeatedMovement(Square startingSquare, Func<Square, Square> movement) {

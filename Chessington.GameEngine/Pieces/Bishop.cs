@@ -13,10 +13,10 @@ namespace Chessington.GameEngine.Pieces {
             List<Square> availableMoves = new List<Square>();
 
             List<Func<Square, Square>> directions = new List<Func<Square, Square>> {
-                square => square.GetSquareByRelativePosition(Direction.UpRight, 1),
-                square => square.GetSquareByRelativePosition(Direction.UpLeft, 1),
-                square => square.GetSquareByRelativePosition(Direction.DownRight, 1),
-                square => square.GetSquareByRelativePosition(Direction.DownLeft, 1)
+                square => square.GetRelativeSquare(Direction.UpRight, 1),
+                square => square.GetRelativeSquare(Direction.UpLeft, 1),
+                square => square.GetRelativeSquare(Direction.DownRight, 1),
+                square => square.GetRelativeSquare(Direction.DownLeft, 1)
             };
 
             directions.SelectMany(direction => board.GetSquaresHitByRepeatedMovement(currentPosition, direction));
