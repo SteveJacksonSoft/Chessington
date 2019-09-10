@@ -18,9 +18,12 @@ namespace Chessington.GameEngine.Pieces {
                 Direction.DownRight
             };
 
-            return availableDirections.Select(direction =>
-                board.FindPiece(this).GetRelativeSquare(direction, 1)
-            ).Where(square => board.ContainsSquare(square) && board.SquareIsEmpty(square));
+            return FilterOutMovesToIllegalSquares(
+                board,
+                availableDirections.Select(direction =>
+                    board.FindPiece(this).GetRelativeSquare(direction, 1)
+                )
+            );
         }
     }
 }

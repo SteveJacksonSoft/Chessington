@@ -5,16 +5,16 @@ namespace Chessington.GameEngine.Pieces {
     public abstract class LineMovingPiece : Piece {
         //QQ question - Should I have an abstract property?
         protected abstract List<Direction> AvailableDirections { get; }
-        
+
         protected LineMovingPiece(Player player) : base(player) { }
-        
+
         public override IEnumerable<Square> GetAvailableMoves(Board board) {
-            return AvailableDirections.SelectMany(direction =>
-                board.GetLineInDirectionUpToBlockingPiece(board.FindPiece(this),direction)
-            ).Where(square => {
-                Piece occupyingPiece = board.GetPiece(square);
-                return occupyingPiece == null || occupyingPiece.Player != this.Player;
-            });
+            return FilterOutMovesToIllegalSquares(
+                board,
+                AvailableDirections.SelectMany(direction =>
+                    board.GetLineInDirectionUpToBlockingPiece(board.FindPiece(this), direction)
+                )
+            );
         }
     }
 }
