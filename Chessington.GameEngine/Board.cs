@@ -65,14 +65,14 @@ namespace Chessington.GameEngine {
                    square.Col >= 0 && square.Col < GameSettings.BoardSize;
         }
 
-        public bool SquareIsOccupied(Square square) {
+        public bool SquareIsEmpty(Square square) {
             return board[square.Row, square.Col] == null;
         }
 
-        public IEnumerable<Square> GetSquaresHitByRepeatedMovement(Square startingSquare, Func<Square, Square> movement) {
+        public IEnumerable<Square> GetSquaresHitByRepeatedMovementUntilBlocked(Square startingSquare, Func<Square, Square> movement) {
             Square nextSquare = movement(startingSquare);
             while(true) {
-                if (!ContainsSquare(nextSquare)) {
+                if (!ContainsSquare(nextSquare) || !SquareIsEmpty(nextSquare)) {
                     yield break;
                 }
                 yield return nextSquare;

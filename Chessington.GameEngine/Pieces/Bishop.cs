@@ -10,22 +10,19 @@ namespace Chessington.GameEngine.Pieces {
         public override IEnumerable<Square> GetAvailableMoves(Board board) {
             Square currentPosition = board.FindPiece(this);
 
-            List<Square> availableMoves = new List<Square>();
-
-            List<Func<Square, Square>> directions = new List<Func<Square, Square>> {
-                square => square.GetRelativeSquare(Direction.UpRight, 1),
-                square => square.GetRelativeSquare(Direction.UpLeft, 1),
-                square => square.GetRelativeSquare(Direction.DownRight, 1),
-                square => square.GetRelativeSquare(Direction.DownLeft, 1)
+            List<Direction> availableDirections = new List<Direction> {
+                Direction.UpRight,
+                Direction.UpLeft,
+                Direction.DownRight,
+                Direction.DownLeft
             };
 
-            directions.SelectMany(direction => board.GetSquaresHitByRepeatedMovement(currentPosition, direction));
-            
-            directions.ForEach(direction => 
-                availableMoves.AddRange(board.GetSquaresHitByRepeatedMovement(currentPosition, direction))
+            return availableDirections.SelectMany(direction =>
+                board.GetSquaresHitByRepeatedMovementUntilBlocked(
+                    currentPosition,
+                    square => square.GetRelativeSquare(direction, 1)
+                )
             );
-            
-            return availableMoves;
         }
     }
 }
