@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Chessington.GameEngine.Pieces {
     public class Pawn : Piece {
@@ -18,6 +19,8 @@ namespace Chessington.GameEngine.Pieces {
                 availableMoves.Add(currentPosition.GetRelativeSquare(AttackingDirection, 2));
             }
 
+            availableMoves.AddRange(GetAttackableSquares(board));
+            
             return availableMoves;
         }
 
@@ -35,6 +38,18 @@ namespace Chessington.GameEngine.Pieces {
                    && !HasMoved
                    && board.ContainsSquare(secondSquareForwards)
                    && board.SquareIsEmpty(secondSquareForwards);
+        }
+
+        private IEnumerable<Square> GetAttackableSquares(Board board) {
+            Square currentPosition = board.FindPiece(this);
+            List<Square> potentialTargetSquares = new List<Square> {
+                currentPosition.GetRelativeSquare(AttackingDirection, 1).GetRelativeSquare(Direction.Left, 1),
+                currentPosition.GetRelativeSquare(AttackingDirection, 1).GetRelativeSquare(Direction.Right, 1)
+            };
+
+            return potentialTargetSquares
+                .Where(board.ContainsSquare)
+                .Where(square => board.GetPiece(square) != null && board.GetPiece(square).Player != this.Player);
         }
     }
 }
