@@ -7,8 +7,6 @@ namespace Chessington.GameEngine.Pieces {
             : base(player) { }
 
         public override IEnumerable<Square> GetAvailableMoves(Board board) {
-            Square currentPosition = board.FindPiece(this);
-
             List<Direction> availableDirections = new List<Direction> {
                 Direction.Up,
                 Direction.Right,
@@ -21,7 +19,7 @@ namespace Chessington.GameEngine.Pieces {
             };
 
             return availableDirections.Select(direction =>
-                currentPosition.GetRelativeSquare(direction, 1)
+                board.FindPiece(this).GetRelativeSquare(direction, 1)
             ).Where(square => board.ContainsSquare(square) && board.SquareIsEmpty(square));
         }
     }

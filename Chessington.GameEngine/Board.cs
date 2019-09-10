@@ -69,14 +69,22 @@ namespace Chessington.GameEngine {
             return board[square.Row, square.Col] == null;
         }
 
-        public IEnumerable<Square> GetSquaresHitByRepeatedMovementUntilBlocked(Square startingSquare, Func<Square, Square> movement) {
-            Square nextSquare = movement(startingSquare);
+        /**
+         * Collects an IEnumerable of Squares, starting with the first square away from the startingSquare in the
+         * specified direction, and continuing in that direction until it hits an occupied square (which is also
+         * returned), or until the edge of the board if no occupied square is hit.
+         */
+        public IEnumerable<Square> GetLineInDirectionUpToBlockingPiece(Square startingSquare, Direction direction) {
+            Square nextSquare = startingSquare.GetRelativeSquare(direction, 1);
             while(true) {
-                if (!ContainsSquare(nextSquare) || !SquareIsEmpty(nextSquare)) {
+                if (!ContainsSquare(nextSquare)) {
                     yield break;
                 }
                 yield return nextSquare;
-                nextSquare = movement(nextSquare);
+                if (!SquareIsEmpty(nextSquare)) {
+                    yield break;
+                }
+                nextSquare = nextSquare.GetRelativeSquare(direction, 1);;
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO.IsolatedStorage;
 using System.Linq;
 
 namespace Chessington.GameEngine.Pieces
@@ -10,8 +9,6 @@ namespace Chessington.GameEngine.Pieces
             : base(player) { }
 
         public override IEnumerable<Square> GetAvailableMoves(Board board) {
-            Square currentPosition = board.FindPiece(this);
-
             List<Direction> availableDirections = new List<Direction> {
                 Direction.Up,
                 Direction.Right,
@@ -20,11 +17,11 @@ namespace Chessington.GameEngine.Pieces
             };
 
             return availableDirections.SelectMany(direction =>
-                board.GetSquaresHitByRepeatedMovementUntilBlocked(
-                    currentPosition,
-                    square => square.GetRelativeSquare(direction, 1)
-                )
-            );
+                board.GetLineInDirectionUpToBlockingPiece(board.FindPiece(this), direction)
+            ).Where(square => {
+                Piece occupyingPiece = board.GetPiece(square);
+                return occupyingPiece == null || occupyingPiece.Player != this.Player;
+            });
         }
     }
 }
